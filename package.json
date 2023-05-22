@@ -1,5 +1,5 @@
 {
-  "name": "service_node_js",
+  "name": "heailum-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,11 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgolcu00/Healium-Service.git"
+  },
   "dependencies": {
     "bcrypt": "^5.0.1",
     "dotenv": "16.0.3",

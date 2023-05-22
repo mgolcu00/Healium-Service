@@ -34,19 +34,6 @@ const generateDietCompletion = async (prompt, prefs, user) => {
     return completion.data.choices[0].text;
 }
 
-
-// const result = generateDietCompletion(
-//     "i have a deppresion and i want to eat healthy",
-//     {
-//         age: 20,
-//         gender: "Male",
-//         height: 180,
-//         weight: 80,
-//         allergies: ["milk", "egg"],
-//     },
-//     {}
-// )
-
 module.exports = {
     generateDietCompletion,
 };
