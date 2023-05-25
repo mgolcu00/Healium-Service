@@ -41,7 +41,7 @@ class UserDemandController {
             }
             res.json(baseResponse.createResponse(demand, 'Demand fetched successfully', 200, null));
         } catch (error) {
-            res.status(400).json(baseResponse.createResponse(null, error.message, 400, error.toString()));
+            res.status(400).json(baseResponse.createResponse(null, error.message, 400, error));
         }
     }
 

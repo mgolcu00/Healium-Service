@@ -8,7 +8,7 @@ const UserDemandSchema = require('../data/schema/UserDemandSchema');
 const dotenv = require('dotenv');
 const GptCreatedDietService = require('./GptCreatedDietService');
 const UserService = require('./UserService');
-
+const { DatabaseError } = require('../core/Errors');
 dotenv.config();
 
 
@@ -44,16 +44,25 @@ class UserDemandService {
 
 
     async getDemandById(id) {
-        return await UserDemandSchema.findById(id);
+        try {
+            return await UserDemandSchema.findById(id);
+        } catch (e) {
+            throw new DatabaseError(e.message);
+        }
     }
     async getDemandsByUserId(userId, status) {
-        if (status) {
-            if (status === 'completed') {
-                return await UserDemandSchema.find({ userId, status }, null, { sort: { completedAt: -1 } })
+        try {
+            if (status) {
+                if (status === 'completed') {
+                    return await UserDemandSchema.find({ userId, status }, null, { sort: { completedAt: -1 } })
+                }
+                return await UserDemandSchema.find({ userId, status }, null, { sort: { createdAt: -1 } });
             }
-            return await UserDemandSchema.find({ userId, status }, null, { sort: { createdAt: -1 } });
+            return await UserDemandSchema.find({ userId });
+        } catch (e) {
+            console.log(e);
+            throw new DatabaseError(e.message);
         }
-        return await UserDemandSchema.find({ userId });
     }
     async getDemandsByStatus(status) {
         return await UserDemandSchema.find({ status });
@@ -109,12 +118,13 @@ class UserDemandService {
 
 
         try {
+            console.log(user);
             this.gptCreatedDietService.createFromGptPrompt(demand.prompt, {
                 demandId: demand._id,
             }, user)
                 .then(async (diet) => {
                     await this.completeDemand(demand._id, diet._id);
-                    this.userService.removeCoins(user._id, 1);
+                    this.userService.removeCoin(user._id, 1);
                 })
                 .catch(async (e) => {
                     console.log(e);

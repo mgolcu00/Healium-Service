@@ -63,7 +63,7 @@ const getReturnVariables = () => {
 
 
 
-exports.generatePrompt = (prompt, user, prefs) => {
+exports.generatePrompt = (prompt, prefs, user) => {
     var prompt = {
         prompt: prompt,
         age: user.age,

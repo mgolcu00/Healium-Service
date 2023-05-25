@@ -32,20 +32,43 @@
  * //   result: { code: 1, message: 'Error while fetching user data', error: 'Database connection failed' }
  * // }
  */
-const createResponse = (data = {}, message = "", code = 0, error = "") => ({
-    data: data,
-    result: {
-      code: code,
-      message: message,
-      error: error
-    }
-  });
-  
+
+
+
+const createResponse = (data = {}, message = "", code = 0, error = null) => {
+  return createResponseNew(error, data, message,code);
+}
+
+const {BaseError} = require("./Errors");
+const createResponseNew = (error = null, data = {}, message = "",code =200) => {
+  if (error instanceof BaseError) {
+    return {
+      data: {},
+      result: {
+        code: error.statusCode,
+        message: error.message,
+        error: error.toString(),
+        type: error.name,
+        isOperational: error.isOperational
+      }
+    };
+  } else {
+    return {
+      data: data,
+      result: {
+        code: code,
+        message: message,
+        error: ""
+      }
+    };
+  }
+};
+
 const unauthorizedResponse = (data = {}, message = "", code = 0, error = "") => {
   return createResponse(data, "Access Denied", 401, error);
 }
 
 module.exports = {
-    createResponse,
-    unauthorizedResponse
+  createResponse,
+  unauthorizedResponse
 }
